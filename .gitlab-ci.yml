@@ -1,0 +1,8 @@
+# nom arbitraire
+test:
+  # association entre le job et un runner qualifié avec cette valeur
+  tags:
+    - formation
+  # liste des commandes a exécuter dans l'ordre
+  script:
+    - echo "TEST !!!"

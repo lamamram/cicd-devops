@@ -1,0 +1,6 @@
+H2:
+ 1/ application.properties
+ 2/ security => requestMatchers => /console/**
+ 3/ entity all names && constructor
+=> curl -H "Content-Type: application/json" -X POST -d '{"title": "truc", "balance": "100.", "overdraft": "-100."}'  localhost:8081/api/accounts 
+

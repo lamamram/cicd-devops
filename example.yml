@@ -1,0 +1,22 @@
+# {
+#   "key": "value",
+#   "key2": {"1": "un"},
+#   "key3": [
+#     "truc",
+#     {
+#       "k": "v",
+#       "j": "w"
+#     },
+#     12
+#   ]
+# }
+
+key: value
+key2:
+  1: un
+cle trois:
+  - truc
+  - k: v
+    j: w
+  - 12
+k4: [machin]
