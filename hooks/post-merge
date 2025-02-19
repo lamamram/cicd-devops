@@ -9,7 +9,7 @@ if [[ -d "../workdir" ]]; then
   if [[ "$last_commit" == "$last_commit_main" ]]; then
     last_commit_origin_main=$(git log -1 --oneline origin/main | awk '{print $1}')
     if [[ "$last_commit_main" == "$last_commit_origin_main" ]]; then
-      git log -1 --stat main | grep -Po "^ \K[a-zA-Z0-9\._/-]+(?= +\|)" | xargs -i cp {} ../workdir/samples
+      git log -1 --stat main | grep -Po "^ \K[a-zA-Z0-9\._/-]+(?= +\|)" | xargs -i cp -r {} ../workdir/samples
     fi
   fi
 fi
