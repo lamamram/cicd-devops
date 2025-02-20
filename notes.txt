@@ -32,3 +32,14 @@ Fini les centaines de lignes inutiles ! Ton code reste court et clair, ce qui le
 Moins de temps passé à taper du code répétitif = plus de temps pour le vrai développement. Et ça, c’est le feu. 🔥
 
 Bref, Lombok, c’est comme un assistant magique qui fait le sale boulot à ta place. Tu codes plus vite et mieux, tout en gardant tes cheveux sur la tête. 😎
+
+TESTING:
+Générer un test à partir du code
+=> surligner la classe de code > clic droit > (vscode) go to test > generate Tests > classe > méthodes
+
+=> la dépendance Spring Boot Starter Test Dependdency
+contient: JUnit, Hamcrest, Mockito, and AssertJ
+
+=> sur Vscode, l'erreur IllegalState : can't create ContextApplication et résolue par 
+   le réglage "boot-java.live-information.automatic-connection.on": false, dans le settings.json
+   Cause: live-reload de l'extension Spring Boot Tools

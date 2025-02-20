@@ -33,7 +33,7 @@ public class AccountController {
   }
 
   @GetMapping("/title/{title}")
-  public List<Account> findByTitle(@PathVariable String title) {
+  public Account findByTitle(@PathVariable String title) {
     return accountRepository.findByTitle(title);
   }
 
