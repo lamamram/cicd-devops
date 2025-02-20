@@ -80,7 +80,7 @@
 				<configuration>
 					<enableAssertions>true</enableAssertions>
 					<includes>
-						<include>**/*Test.java</include>
+						<include>**/*Test.java</include>   
 					</includes>
 					<tags>
 					  <groups>A</groups>

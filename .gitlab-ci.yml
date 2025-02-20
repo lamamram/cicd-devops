@@ -1,26 +1,63 @@
-# nom arbitraire
-test:
-  # association entre le job et un runner qualifié avec cette valeur
+# image par défaut du pipeline écrase l'image du runner
+image: maven:3.9.9-eclipse-temurin-17-alpine
+## déplacer le dossier .m2 des dépendances dans la racine du projet
+## variables uniquement String
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  TRIGGER_CACHE: "off"
+
+# liste qui fixe l'ordre d'exécution des étapes du pipelines 
+stages:
+  - cache
+  - tests
+
+# règles pour le pipeline lui même != pas pour les jobs
+# utilisant les variables d'environnemnt prédéfinies de gitlab
+workflow:
+  rules:
+    # EX CI_PIPELINE_SOURCE: type de déclenchement du pipeline
+    # https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+
+
+generate_cache:
+  stage: cache
   tags:
     - formation
-  # image du job
-  image: maven:3.9.9-eclipse-temurin-17-alpine
-  # liste des commandes a exécuter dans l'ordre
+  script:
+    - mvn compile
+  ## génération du cache .m2 à la racine du projet
+  cache:
+    key: m2
+    paths:
+      - .m2/
+    policy: push
+  # liste de règles: une seule règle vraie exécute le jon (OR)
+  rules:
+     # une règle est vraie si toutes ses clauses sont vraies
+     - changes:
+         - pom.xml
+       when: on_success
+     # ==, !=, =~ => match regex, !~ => ne match pas regex
+     - if: $TRIGGER_CACHE == "on"
+
+test:
+  stage: tests
+  tags:
+    - formation
   script:
     - mvn test
-  # remontée des artefacts == produit généré dans le job
   artifacts:
-    # ramasse tout ce qui est en untracked
-    # untracked: true
-    # ramasse si le job est en succès
-    # when: on_success
-    # niveau de droits minimum pour consulter les artefacts
     paths:
       - target/surefire-reports/TEST-*.xml
     access: developer
     expire_in: "1 hour"
-    # rapports spécifiques à un format et une technologie
-    # remontés dans la GUI
     reports:
       junit: target/surefire-reports/TEST-*.xml
+  # utilisation du cache m2 et persisté malgré son status "untacked" 
+  # à cause d'un git clean au moment du fetch du code
+  cache:
+    key: m2
+    policy: pull
+    untracked: true
       
