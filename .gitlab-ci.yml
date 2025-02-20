@@ -7,4 +7,20 @@ test:
   image: maven:3.9.9-eclipse-temurin-17-alpine
   # liste des commandes a exécuter dans l'ordre
   script:
-    - mvn compile
+    - mvn test
+  # remontée des artefacts == produit généré dans le job
+  artifacts:
+    # ramasse tout ce qui est en untracked
+    # untracked: true
+    # ramasse si le job est en succès
+    # when: on_success
+    # niveau de droits minimum pour consulter les artefacts
+    paths:
+      - target/surefire-reports/TEST-*.xml
+    access: developer
+    expire_in: "1 hour"
+    # rapports spécifiques à un format et une technologie
+    # remontés dans la GUI
+    reports:
+      junit: target/surefire-reports/TEST-*.xml
+      
