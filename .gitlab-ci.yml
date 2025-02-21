@@ -1,22 +1,14 @@
-# image par défaut du pipeline écrase l'image du runner
 image: maven:3.9.9-eclipse-temurin-17-alpine
-## déplacer le dossier .m2 des dépendances dans la racine du projet
-## variables uniquement String
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   TRIGGER_CACHE: "off"
 
-# liste qui fixe l'ordre d'exécution des étapes du pipelines 
 stages:
   - cache
   - tests
 
-# règles pour le pipeline lui même != pas pour les jobs
-# utilisant les variables d'environnemnt prédéfinies de gitlab
 workflow:
   rules:
-    # EX CI_PIPELINE_SOURCE: type de déclenchement du pipeline
-    # https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
 
 
@@ -26,19 +18,15 @@ generate_cache:
     - formation
   script:
     - mvn compile
-  ## génération du cache .m2 à la racine du projet
   cache:
     key: m2
     paths:
       - .m2/
     policy: push
-  # liste de règles: une seule règle vraie exécute le jon (OR)
   rules:
-     # une règle est vraie si toutes ses clauses sont vraies
      - changes:
          - pom.xml
        when: on_success
-     # ==, !=, =~ => match regex, !~ => ne match pas regex
      - if: $TRIGGER_CACHE == "on"
 
 test:
@@ -47,6 +35,10 @@ test:
     - formation
   script:
     - mvn test
+    # afficher la couverture totale dans la sortie
+    - cat target/site/jacoco/index.html
+  # la regex ci après va scruter la sortie de la console du job
+  coverage: /Total.*?([0-9]{1,3})%/
   artifacts:
     paths:
       - target/surefire-reports/TEST-*.xml
@@ -54,8 +46,9 @@ test:
     expire_in: "1 hour"
     reports:
       junit: target/surefire-reports/TEST-*.xml
-  # utilisation du cache m2 et persisté malgré son status "untacked" 
-  # à cause d'un git clean au moment du fetch du code
+      coverage_report:
+        path: target/site/jacoco/jacoco.xml
+        coverage_format: jacoco
   cache:
     key: m2
     policy: pull

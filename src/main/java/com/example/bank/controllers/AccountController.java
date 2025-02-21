@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.bank.entities.Account;
 import com.example.bank.repositories.AccountRepository;
+import com.example.bank.services.impl.AccountServiceImpl;
 
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
   @Autowired
   private AccountRepository accountRepository;
+
+  @Autowired
+  private AccountServiceImpl accountServiceImpl;
 
   @GetMapping
   public Iterable<Account> findAll() {
@@ -53,6 +57,13 @@ public class AccountController {
   public Account updateaccount(@RequestBody Account account, @PathVariable Long id) throws AccountNotFoundException {
     accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
     return accountRepository.save(account);
+  }
+
+  // REM: on devrait utiliser l'objet data du HTTP PUT en json !!!
+  @PutMapping("/withdrawal/{title}/{amount}")
+  public Account withdrawal(@PathVariable String title, @PathVariable String amount) throws AccountNotFoundException {
+    Account account = accountServiceImpl.getAccountByTitle(title);
+    return accountServiceImpl.withdrawal(account, Float.parseFloat(amount));
   }
 
 }

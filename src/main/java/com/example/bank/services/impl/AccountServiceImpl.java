@@ -21,13 +21,13 @@ public class AccountServiceImpl implements AccountService {
 
 
   @Override
-  public void withdrawal(Account account, Float amount) throws IllegalArgumentException {
+  public Account withdrawal(Account account, Float amount) throws IllegalArgumentException {
     Float newBalance = (Float)account.getBalance() - (Float)amount;
     if (newBalance < account.getOverdraft()){
       throw new IllegalArgumentException("not enough bucks !!");
     }
     account.setBalance(newBalance);
-    accountRepository.save(account);
+    return accountRepository.save(account);
   }
   
 }

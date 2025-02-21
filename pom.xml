@@ -30,7 +30,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
-		<!-- junit-surefire.version>3.2.5</junit-surefire.version -->
+		<jacoco.version>0.8.8</jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -73,21 +73,34 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${junit-surefire.version}</version>
-				<configuration>
-					<enableAssertions>true</enableAssertions>
-					<includes>
-						<include>**/*Test.java</include>   
-					</includes>
-					<tags>
-					  <groups>A</groups>
-					  <excludedGroups>B</excludedGroups>
-					</tags>
-				</configuration>
-			</plugin -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules />
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
