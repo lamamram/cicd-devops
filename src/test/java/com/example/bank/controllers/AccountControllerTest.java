@@ -17,7 +17,8 @@ import com.example.bank.services.impl.AccountServiceImpl;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 // 1. TDD normale (attributs, fixture, assertion initiale ...)
-// 2. logique de Mocking (ExtendWith(MockitoExtension.class) =>  Mock [dépôt/service] => Injects [contrôleur])
+// 2. logique de Mocking (ExtendWith(MockitoExtension.class) => Mock [dépôt/service] => Injects
+// [contrôleur])
 // 3. instanciation & usage d'un MockMvc
 @ExtendWith(MockitoExtension.class)
 public class AccountControllerTest {
@@ -27,14 +28,13 @@ public class AccountControllerTest {
 
   @Mock
   private AccountServiceImpl accountServiceImpl;
-  
+
   @InjectMocks
   private AccountController accountController;
-  
+
   @BeforeEach
-  public void setup(){
-    mvc = MockMvcBuilders.standaloneSetup(accountController)
-             .build();
+  public void setup() {
+    mvc = MockMvcBuilders.standaloneSetup(accountController).build();
   }
 
   // l'utilisation du mockmvc demande à la méthode de test de pourvoir lancer une exception
@@ -45,17 +45,17 @@ public class AccountControllerTest {
     Float overdraft = -100.f;
     int amount = 100;
     account = new Account(title, balance, overdraft);
-    
+
     // simulation des méthodes du contrôleur réél
     // déjà testés avec les tests unitaires !!!
     given(accountServiceImpl.getAccountByTitle(title)).willReturn(account);
     account.setBalance(balance - amount);
-    given(accountServiceImpl.withdrawal(account, (float)amount)).willReturn(account);
-    
+    given(accountServiceImpl.withdrawal(account, (float) amount)).willReturn(account);
+
     MockHttpServletResponse response = mvc
-      .perform(put("/api/accounts/withdrawal/" + title + "/" + amount))
-      .andReturn().getResponse();
+        .perform(put("/api/accounts/withdrawal/" + title + "/" + amount)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString()).contains("\"balance\":" + Float.toString(balance - amount));
+    assertThat(response.getContentAsString())
+        .contains("\"balance\":" + Float.toString(balance - amount));
   }
 }

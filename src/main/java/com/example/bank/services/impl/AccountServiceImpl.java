@@ -8,11 +8,11 @@ import com.example.bank.services.AccountService;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-  
+
   @Autowired
   private AccountRepository accountRepository;
 
-  
+
 
   @Override
   public Account getAccountByTitle(String title) {
@@ -22,12 +22,12 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public Account withdrawal(Account account, Float amount) throws IllegalArgumentException {
-    Float newBalance = (Float)account.getBalance() - (Float)amount;
-    if (newBalance < account.getOverdraft()){
+    Float newBalance = (Float) account.getBalance() - (Float) amount;
+    if (newBalance < account.getOverdraft()) {
       throw new IllegalArgumentException("not enough bucks !!");
     }
     account.setBalance(newBalance);
     return accountRepository.save(account);
   }
-  
+
 }

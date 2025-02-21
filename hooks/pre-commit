@@ -1,0 +1,9 @@
+#!/bin/sh
+
+## si la copie de travail n'est pas propre !!!
+## commencer avec
+# git status --porcelain | grep -E "^ ?[AM](.*)\.java" | sed -E 's/^ ?[AM]\s*//'
+# while read line; do
+mvn formatter:format --quiet
+git add .
+# done

@@ -54,14 +54,16 @@ public class AccountController {
   }
 
   @PutMapping("/{id}")
-  public Account updateaccount(@RequestBody Account account, @PathVariable Long id) throws AccountNotFoundException {
+  public Account updateaccount(@RequestBody Account account, @PathVariable Long id)
+      throws AccountNotFoundException {
     accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
     return accountRepository.save(account);
   }
 
   // REM: on devrait utiliser l'objet data du HTTP PUT en json !!!
   @PutMapping("/withdrawal/{title}/{amount}")
-  public Account withdrawal(@PathVariable String title, @PathVariable String amount) throws AccountNotFoundException {
+  public Account withdrawal(@PathVariable String title, @PathVariable String amount)
+      throws AccountNotFoundException {
     Account account = accountServiceImpl.getAccountByTitle(title);
     return accountServiceImpl.withdrawal(account, Float.parseFloat(amount));
   }
