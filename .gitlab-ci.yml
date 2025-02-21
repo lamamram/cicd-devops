@@ -80,5 +80,7 @@ sonar:
       -Dsonar.java.binaries=target
       -Dsonar.login=$SONAR_TOKEN
       -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+      -Dsonar.qualitygate.wait=true
+
   # "*" alias yaml : accroche le contenu du label Yaml de même nom
   cache: *cache
