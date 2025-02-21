@@ -16,7 +16,7 @@ import com.example.bank.entities.Account;
 import com.example.bank.services.impl.AccountServiceImpl;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-// 1. TDD normale
+// 1. TDD normale (attributs, fixture, assertion initiale ...)
 // 2. logique de Mocking (ExtendWith(MockitoExtension.class) =>  Mock [dépôt/service] => Injects [contrôleur])
 // 3. instanciation & usage d'un MockMvc
 @ExtendWith(MockitoExtension.class)
