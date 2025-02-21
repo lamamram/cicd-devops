@@ -6,10 +6,17 @@ variables:
 stages:
   - cache
   - tests
+  - quality
 
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+
+# structure transparente du point de vue du pipeline
+.cache: &cache
+    key: m2
+    policy: pull
+    untracked: true
 
 
 generate_cache:
@@ -19,17 +26,20 @@ generate_cache:
   script:
     - mvn compile
   cache:
-    key: m2
+    # "<<": ancre yaml : accroche le label mais permet des ajouts / modifications
+    <<: *cache
     paths:
       - .m2/
     policy: push
+    untracked: false
   rules:
      - changes:
          - pom.xml
        when: on_success
      - if: $TRIGGER_CACHE == "on"
 
-test:
+# préfixer le job avec "." désactive le job
+.test:
   stage: tests
   tags:
     - formation
@@ -49,8 +59,23 @@ test:
       coverage_report:
         path: target/site/jacoco/jacoco.xml
         coverage_format: jacoco
-  cache:
-    key: m2
-    policy: pull
-    untracked: true
-      
+  # label YAML: nom de la valeur de la clé
+  cache: *cache
+
+sonar:
+  stage: quality
+  tags:
+    - formation
+  script:
+    # ">" convertit les sauts de lignes en espace
+    ## gestion du token
+    # projet dev > settings > CI/CD > Variables > add Variable
+    # all / masked & hidden / non coché "protected" / nom / valeur
+    - >
+      mvn compile sonar:sonar
+      -Dsonar.projectKey=dev
+      -Dsonar.host.url=http://gitlab.lan.fr:9000
+      -Dsonar.java.binaries=target
+      -Dsonar.login=$SONAR_TOKEN
+  # "*" alias yaml : accroche le contenu du label Yaml de même nom
+  cache: *cache

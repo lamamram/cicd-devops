@@ -5,12 +5,14 @@
 
 * outils sonarQube de SonarSource
   - outils client (sonarscanner) / serveur (sonarQube)
-  - côté client : goal `mvn sonar` ajouté par le plugin **sonar-maven-plugin** dans le pom
+  - côté client : goal `mvn sonar:sonar` ajouté par le plugin **sonar-maven-plugin** dans le pom
   - côté serveur : conteneur sonarQube (cf infra)
 
 #### setup
 
 1. création du conteneur sonarqube
+
+> mettre la VM à 10G dans le **Vagrantfile**
 
 ```bash
 docker run \
