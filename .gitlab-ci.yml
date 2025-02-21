@@ -39,7 +39,7 @@ generate_cache:
      - if: $TRIGGER_CACHE == "on"
 
 # préfixer le job avec "." désactive le job
-.test:
+test:
   stage: tests
   tags:
     - formation
@@ -50,8 +50,10 @@ generate_cache:
   # la regex ci après va scruter la sortie de la console du job
   coverage: /Total.*?([0-9]{1,3})%/
   artifacts:
+    # artifacts:paths: permet de télécharger depuis Gitlab 
+    # ET transférer les artifacts dans les jobs suivants
     paths:
-      - target/surefire-reports/TEST-*.xml
+      - target/site/jacoco/jacoco.xml
     access: developer
     expire_in: "1 hour"
     reports:
@@ -77,5 +79,6 @@ sonar:
       -Dsonar.host.url=http://gitlab.lan.fr:9000
       -Dsonar.java.binaries=target
       -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
   # "*" alias yaml : accroche le contenu du label Yaml de même nom
   cache: *cache
