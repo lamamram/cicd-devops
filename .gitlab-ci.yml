@@ -13,7 +13,6 @@ workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
 
-# structure transparente du point de vue du pipeline
 .cache: &cache
     key: m2
     policy: pull
@@ -27,7 +26,6 @@ generate_cache:
   script:
     - mvn compile
   cache:
-    # "<<": ancre yaml : accroche le label mais permet des ajouts / modifications
     <<: *cache
     paths:
       - .m2/
@@ -39,14 +37,12 @@ generate_cache:
        when: on_success
      - if: $TRIGGER_CACHE == "on"
 
-# préfixer le job avec "." désactive le job
-test:
+.test:
   stage: tests
   tags:
     - formation
   script:
-    ## enlever les tests E2E
-    - mvn test -DexcludedGroups=E2E
+    - mvn test -DexcludedGroups=E2E -Dtest=!CucumberTest
     - cat target/site/jacoco/index.html
   coverage: /Total.*?([0-9]{1,3})%/
   artifacts:
@@ -131,7 +127,10 @@ e2e:
     - chmod u+x /usr/local/bin/geckodriver
   script:
     # filtrer les tests selon des tags
-    - mvn test -Dgroups=E2E
+    ## VERSION SELENIUM SOLO
+    # - mvn test -Dgroups=E2E
+    ## VERSION SELENIUM + CUCUMBER
+    - mvn test -Dtest=CucumberTest
   cache: *cache
   rules:
     - if: $CI_COMMIT_BRANCH == "main"

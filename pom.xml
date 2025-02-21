@@ -32,6 +32,8 @@
 		<java.version>17</java.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<selenium-java.version>3.141.0</selenium-java.version>
+		<cucumber.version>7.11.0</cucumber.version>
+		<junit-platform-suite.version>1.9.2</junit-platform-suite.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -66,6 +68,26 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<!-- cucumber -->
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>${junit-platform-suite.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- selenium -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
