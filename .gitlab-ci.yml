@@ -40,13 +40,13 @@ generate_cache:
      - if: $TRIGGER_CACHE == "on"
 
 # préfixer le job avec "." désactive le job
-.test:
+test:
   stage: tests
   tags:
     - formation
   script:
     ## enlever les tests E2E
-    - mvn test
+    - mvn test -DexcludedGroups=E2E
     # afficher la couverture totale dans la sortie
     - cat target/site/jacoco/index.html
   # la regex ci après va scruter la sortie de la console du job
