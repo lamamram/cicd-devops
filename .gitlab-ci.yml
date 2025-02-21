@@ -35,6 +35,10 @@ test:
     - formation
   script:
     - mvn test
+    # afficher la couverture totale dans la sortie
+    - cat target/site/jacoco/index.html
+  # la regex ci après va scruter la sortie de la console du job
+  coverage: /Total.*?([0-9]{1,3})%/
   artifacts:
     paths:
       - target/surefire-reports/TEST-*.xml
