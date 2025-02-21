@@ -8,6 +8,7 @@ import java.net.URL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 public class SeleniumRemoteTest {
   // pour manipuler un navigateur personnel OU un serveur Selenium
@@ -33,6 +34,7 @@ public class SeleniumRemoteTest {
   }
 
   @Tag("E2E")
+  @Test
   public void testDawanHomePage() {
     driver.get("https://dawan.fr");
     assertThat(driver.getTitle()).contains("Dawan");
