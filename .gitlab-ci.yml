@@ -7,6 +7,7 @@ stages:
   - cache
   - tests
   - quality
+  - interfaces
 
 workflow:
   rules:
@@ -39,11 +40,12 @@ generate_cache:
      - if: $TRIGGER_CACHE == "on"
 
 # préfixer le job avec "." désactive le job
-test:
+.test:
   stage: tests
   tags:
     - formation
   script:
+    ## enlever les tests E2E
     - mvn test
     # afficher la couverture totale dans la sortie
     - cat target/site/jacoco/index.html
@@ -64,7 +66,7 @@ test:
   # label YAML: nom de la valeur de la clé
   cache: *cache
 
-sonar:
+.sonar:
   stage: quality
   tags:
     - formation
@@ -83,4 +85,23 @@ sonar:
       -Dsonar.qualitygate.wait=true
 
   # "*" alias yaml : accroche le contenu du label Yaml de même nom
+  cache: *cache
+
+###### POST DEPLOY #####
+
+e2e:
+  stage: interfaces
+  tags:
+    - formation
+  # conteneur Docker crée à la volée avec un DNS (alias) auto. utilisable par le conteneur maven
+  services:
+    - name: selenium/standalone-firefox:133.0-geckodriver-0.35
+      alias: selenium-server
+  before_script:
+    # on compresse le driver et on l'installe dans le PATH
+    - tar -xvzf geckodriver-v0.35.0-linux64.tar.gz -C /usr/local/bin
+    - chmod u+x /usr/local/bin/geckodriver
+  script:
+    # filtrer les tests selon des tags
+    - mvn test -Dgroups=E2E
   cache: *cache
